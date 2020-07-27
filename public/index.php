@@ -5,9 +5,9 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $app = AppFactory::create();
 
-if (ENV === 'dev'){
-    $app->getRouteCollector()->setBasePath(dirname(dirname($_SERVER['SCRIPT_NAME'])));
-}
+//if (ENV === 'dev'){
+    $app->getRouteCollector()->setBasePath(dirname($_SERVER['SCRIPT_NAME'], 2));
+//}
 
 // Parse json, form data and xml
 $app->addBodyParsingMiddleware();
