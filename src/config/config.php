@@ -9,6 +9,6 @@
 //define("DB_NAME", getenv('DB_NAME'));
 
 define("DB_HOST", 'localhost');
-define("DB_USER", 'root');
-define("DB_PASS", '');
-define("DB_NAME", 'coding_jobs');
+define("DB_USER", 'oyaacoke_james');
+define("DB_PASS", '31*66D9o0');
+define("DB_NAME", 'oyaacoke_coding_jobs');
