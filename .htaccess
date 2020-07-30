@@ -2,6 +2,9 @@ RewriteEngine On
 
 RewriteRule ^$ public/ [L]
 RewriteRule (^[^/]*$) public/$1 [L]
+
+RewriteCond %{HTTP:Authorization} ^(.*)
+RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
 <Files ".env">
   Order Allow,Deny
   Deny from all
