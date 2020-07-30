@@ -65,7 +65,18 @@ class Job
         return $stmt->rowCount() > 0;
     }
 
-    public function getAllJobs()
+    public function jobIdExists($id):bool
+    {
+        $query = 'SELECT job_title from jobs WHERE id = :id';
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id', $id);
+
+        $stmt->execute();
+        return $stmt->rowCount() > 0;
+    }
+
+    public function getAllJobs():array
     {
         $query = 'SELECT * from jobs';
 
@@ -87,6 +98,59 @@ class Job
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getNewTwitterJobs($limit=10)
+    {
+        $query = 'SELECT * from jobs WHERE jobs.new = 1 AND twitter = 0 ORDER BY created_at DESC LIMIT :limit';
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getTwitterPostedJobs($limit = 10)
+    {
+        $query = 'SELECT posted.id as post_id, posted.job_id, posted.platform, posted.post_date, jobs.job_title, jobs.company, jobs.link as job_link, posted.link as tweet_link
+        from posted LEFT JOIN jobs on posted.job_id = jobs.id WHERE platform = "twitter"  ORDER BY created_at DESC LIMIT :limit';
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function setJobPostedTwitter($jobId)
+    {
+        $query = 'UPDATE jobs SET twitter=1 WHERE id = :job_id';
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':job_id', $jobId);
+        return $stmt->execute();
+    }
+
+    public function postTwitterJob($link, $job_id,$platform = 'twitter')
+    {
+        $this->conn->beginTransaction();
+        $query = 'INSERT INTO posted SET link=:link, platform=:platform, job_id=:job_id';
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':job_id', $job_id);
+        $stmt->bindParam(':link', $link);
+        $stmt->bindParam(':platform', $platform);
+
+        if ($stmt->execute()){
+            $this->setJobPostedTwitter($job_id);
+            $this->conn->commit();
+            return true;
+        }
+        $this->conn->rollBack();
+        return false;
     }
 
     /**
