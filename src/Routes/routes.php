@@ -14,6 +14,14 @@ $app->group('/oauth', function (RouteCollectorProxy $group){
     $group->post('/generate', TokenCreate::class);
 });
 
+$app->group('/twitter-user', function (RouteCollectorProxy $group){
+    $group->post('/', function (Request $request, Response $response){
+        return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus(200);
+    });
+});
+
 $app->group('', function () use ($app) {
 
     $app->get('/', function (Request $request, Response $response) {
