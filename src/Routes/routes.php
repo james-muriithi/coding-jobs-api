@@ -2,15 +2,19 @@
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Routing\RouteCollectorProxy;
+
 require_once __DIR__.'/../Models/Job.php';
 require_once __DIR__.'/../Models/Auth.php';
 require_once  __DIR__.'/../Action/Auth/TokenCreate.php';
 require_once  __DIR__.'/../Action/User/CreateUser.php';
 require_once  __DIR__.'/../Middleware/JwtAuthMiddleware.php';
 
-$app->post('/oauth/generate', TokenCreate::class);
+$app->group('/oauth', function (RouteCollectorProxy $group){
+    $group->post('/generate', TokenCreate::class);
+});
 
-$app->group('/', function () use ($app) {
+$app->group('', function () use ($app) {
 
     $app->get('/', function (Request $request, Response $response) {
         $response->getBody()->write(json_encode(['message' => 'hello there']));
@@ -19,8 +23,8 @@ $app->group('/', function () use ($app) {
             ->withStatus(200);
     });
 
-    $app->group('/user', function () use ($app){
-        $app->post('/user/register', CreateUser::class);
+    $app->group('/user', function (RouteCollectorProxy $group){
+        $group->post('/register', CreateUser::class);
     })->add(JwtAuthMiddleware::class);
 
 
