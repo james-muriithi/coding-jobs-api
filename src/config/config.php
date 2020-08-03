@@ -1,14 +1,16 @@
 <?php
-//$dotenv = Dotenv\Dotenv::createImmutable(__DIR__.'/../../');
-//$dotenv->load();
+require_once __DIR__.'/../../vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__.'/../../');
+$dotenv->load();
 //
-//// Configuration for Database
-//define("DB_HOST", getenv('DB_HOST'));
-//define("DB_USER", getenv('DB_USER'));
-//define("DB_PASS", getenv('DB_PASS'));
-//define("DB_NAME", getenv('DB_NAME'));
 
-define("DB_HOST", 'localhost');
-define("DB_USER", 'oyaacoke_james');
-define("DB_PASS", '31*66D9o0');
-define("DB_NAME", 'oyaacoke_coding_jobs');
+//// Configuration for Database
+define("DB_HOST", $_ENV['DB_HOST']);
+define("DB_USER", $_ENV['DB_USER']);
+define("DB_PASS", $_ENV['DB_PASS']);
+define("DB_NAME", $_ENV['DB_NAME']);
+
+//define("DB_HOST", 'localhost');
+//define("DB_USER", 'root');
+//define("DB_PASS", '');
+//define("DB_NAME", 'coding_jobs');

@@ -14,13 +14,6 @@ $app->group('/oauth', function (RouteCollectorProxy $group){
     $group->post('/generate', TokenCreate::class);
 });
 
-$app->group('/twitter-user', function (RouteCollectorProxy $group){
-    $group->post('/', function (Request $request, Response $response){
-        return $response
-            ->withHeader('Content-Type', 'application/json')
-            ->withStatus(200);
-    });
-});
 
 $app->group('', function () use ($app) {
 
@@ -52,6 +45,40 @@ $app->group('', function () use ($app) {
         return $response
             ->withHeader('Content-Type', 'application/json')
             ->withStatus(200);
+    });
+
+    //get job
+    $app->get('/job', function (Request $request,Response $response){
+        $data = $request->getQueryParams();
+
+        $title = isset($data['title']) ? $data['title'] : '';
+        $job_id = isset($data['id']) ? $data['id'] : '';
+        $job = new Job();
+        if (!empty($job_id)){
+            if ($job->jobIdExists($job_id)){
+                $response->getBody()->write(json_encode($job->getJobWithId($job_id)));
+                return $response
+                    ->withHeader('Content-Type', 'application/json')
+                    ->withStatus(200);
+            }else{
+                $response->getBody()->write(json_encode(['error'=>true, 'message'=> 'No job was found with that id']));
+                return $response
+                    ->withHeader('Content-Type', 'application/json')
+                    ->withStatus(404);
+            }
+        }elseif (!empty($title)){
+            if ($job->jobTitleExists($title)){
+                $response->getBody()->write(json_encode($job->getJobWithTitle($title)));
+                return $response
+                    ->withHeader('Content-Type', 'application/json')
+                    ->withStatus(200);
+            }else{
+                $response->getBody()->write(json_encode(['error'=>true, 'message'=> 'No job was found with that title']));
+                return $response
+                    ->withHeader('Content-Type', 'application/json')
+                    ->withStatus(404);
+            }
+        }
     });
 
     $app->get('/posted',function (Request $request, Response $response){

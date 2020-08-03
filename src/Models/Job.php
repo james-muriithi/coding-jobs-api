@@ -14,14 +14,14 @@ class Job
     }
 
     /**
-     * @var string $title 
-     * @var string $company 
-     * @var string $location 
-     * @var string $salary 
-     * @var string $summary 
-     * @var string $post_date 
-     * @var string $link 
-     * @var string $full_text 
+     * @var string $title
+     * @var string $company
+     * @var string $location
+     * @var string $salary
+     * @var string $summary
+     * @var string $post_date
+     * @var string $link
+     * @var string $full_text
      * @return bool
      * */
     public function saveJob($title='', $company='', $location ='', $salary='',$summary='', $post_date='', $link='', $full_text='')
@@ -61,6 +61,19 @@ class Job
         $title = '%'.$title.'%';
         $stmt->bindParam(':title', $title);
         $stmt->bindParam(':link', $url);
+        $stmt->execute();
+        return $stmt->rowCount() > 0;
+    }
+
+    public function jobTitleExists($title)
+    {
+        $query = 'SELECT job_title from jobs WHERE job_title LIKE :title';
+
+        $title = '%'.$title.'%';
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':title', $title);
+
         $stmt->execute();
         return $stmt->rowCount() > 0;
     }
@@ -151,6 +164,27 @@ class Job
         }
         $this->conn->rollBack();
         return false;
+    }
+
+    public function getJobWithId($job_id):array
+    {
+        $query = 'SELECT * FROM jobs WHERE id=:id';
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id', $job_id);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getJobWithTitle($job_title):array
+    {
+        $query = 'SELECT * FROM jobs WHERE job_title LIKE :job_title';
+        $stmt = $this->conn->prepare($query);
+        $job_title = '%'. $job_title .'%';
+        $stmt->bindParam(':job_title', $job_title);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     /**
