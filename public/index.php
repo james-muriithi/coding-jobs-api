@@ -1,13 +1,15 @@
 <?php
-use Slim\Factory\AppFactory;
-
 require __DIR__ . '/../vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__.'/../');
+$dotenv->load();
+
+use Slim\Factory\AppFactory;
 
 $app = AppFactory::create();
 
-//if (ENV === 'dev'){
+if ($_ENV['ENV'] === 'dev'){
     $app->getRouteCollector()->setBasePath(dirname($_SERVER['SCRIPT_NAME'], 2));
-//}
+}
 
 // Parse json, form data and xml
 $app->addBodyParsingMiddleware();
