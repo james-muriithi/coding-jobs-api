@@ -55,10 +55,10 @@ class Job
      * */
     public function jobExists($title, $url)
     {
-        $query = 'SELECT id from jobs WHERE job_title LIKE :title OR link = :link';
+        $query = 'SELECT id from jobs WHERE job_title = :title OR link = :link';
 
         $stmt = $this->conn->prepare($query);
-        $title = '%'.$title.'%';
+
         $stmt->bindParam(':title', $title);
         $stmt->bindParam(':link', $url);
         $stmt->execute();
