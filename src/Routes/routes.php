@@ -6,22 +6,29 @@ use Slim\Routing\RouteCollectorProxy;
 
 require_once __DIR__.'/../Models/Job.php';
 require_once __DIR__.'/../Models/Auth.php';
+require_once __DIR__.'/../Models/TwitterUser.php';
 require_once  __DIR__.'/../Action/Auth/TokenCreate.php';
 require_once  __DIR__.'/../Action/User/CreateUser.php';
+require_once __DIR__.'/../Action/TwitterUser/RegisterTwitterUser.php';
 require_once  __DIR__.'/../Middleware/JwtAuthMiddleware.php';
 
-$app->group('/oauth', function (RouteCollectorProxy $group){
-    $group->post('/generate', TokenCreate::class);
-});
 
 
-$app->group('', function () use ($app) {
+$app->group('/', function () use ($app) {
 
     $app->get('/', function (Request $request, Response $response) {
         $response->getBody()->write(json_encode(['message' => 'hello there']));
         return $response
             ->withHeader('Content-Type', 'application/json')
             ->withStatus(200);
+    });
+
+    $app->group('/twitter-user', function (RouteCollectorProxy $group){
+        $group->post('/register', RegisterTwitterUser::class);
+    });
+
+    $app->group('/oauth', function (RouteCollectorProxy $group){
+        $group->post('/generate', TokenCreate::class);
     });
 
     $app->group('/user', function (RouteCollectorProxy $group){

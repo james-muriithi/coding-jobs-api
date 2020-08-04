@@ -11,6 +11,21 @@
     - `limit=3` The number of jobs to return (default is 10) optional
     - `platform=twitter` new jobs for a certain platform (e.g. twitter, telegram) optional
 
+- <code>POST</code> [https://developer.coding-jobs.oyaa.co.ke/oauth/generate](https://developer.coding-jobs.oyaa.co.ke/oauth/generate) ➡️ generate access token
+> Data
+```JSON
+ {
+  "username": "username",
+  "password": "password"
+ }
+```
+> Response
+```JSON
+{
+    "access_token": "ACCESSTOKEN"
+}
+```
+
 - <code>POST</code> [https://developer.coding-jobs.oyaa.co.ke/new](https://developer.coding-jobs.oyaa.co.ke/new) ➡️ post a new job
     > Auth required: Yes (OAuth 2.0)
     ```php

@@ -31,9 +31,47 @@ class TwitterUser extends User
         return $stmt->execute();
     }
 
+    public function updateUser($name, $subscribed, $preference, $email = '', $phone_number=''):bool
+    {
+        $query = 'UPDATE twitter_users SET name = :name, subscribed=:subscribed, preference=:pref, email=:email, phone_number=:phone_number';
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':pref', $preference);
+        $stmt->bindParam(':subscribed', $subscribed);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':phone_number', $phone_number);
+
+        return $stmt->execute();
+    }
+
+    public function userExists($screen_name='')
+    {
+        if (!empty($screen_name)){
+            $this->setScreenName($screen_name);
+        }
+
+        $query = 'SELECT id FROM twitter_users WHERE screen_name =:screen_name';
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':screen_name', $this->screen_name);
+
+        $stmt->execute();
+        return $stmt->rowCount() > 0;
+    }
+
     public function getUser(): array
     {
+        $query = 'SELECT * FROM twitter_users WHERE screen_name=:screen_name';
 
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(':screen_name', $this->screen_name);
+
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
 
