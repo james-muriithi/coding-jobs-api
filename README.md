@@ -45,7 +45,18 @@
         "summary":"A small job description",
         "salary":"KSh 40000",
         "link":"https://www.brightermonday.co.ke/listings/data-analyst-mpjwzz",
-        "post_date":"5d ago"
+        "post_date":"5d ago",
+        "full_text" : "full job description"
     }
     ```
+  
+  - <code>POST</code> [https://developer.coding-jobs.oyaa.co.ke/user/register](https://developer.coding-jobs.oyaa.co.ke/user/register) ➡️ register new user
+  > Data
+  ```JSON
+   {
+    "username": "username",
+    "password": "password",
+    "fullname": "full name"
+   }
+  ```
   ## Licence

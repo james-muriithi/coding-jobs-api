@@ -33,7 +33,7 @@ $app->group('/', function () use ($app) {
 
     $app->group('/user', function (RouteCollectorProxy $group){
         $group->post('/register', CreateUser::class);
-    })->add(JwtAuthMiddleware::class);
+    });
 
 
     $app->get('/new', function (Request $request, Response $response){
