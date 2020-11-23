@@ -39,13 +39,15 @@ $app->group('/', function () use ($app) {
     $app->get('/new', function (Request $request, Response $response){
         $data = $request->getQueryParams();
 
-        $limit = isset($data['limit']) ? $data['limit'] : '';
+        $limit = isset($data['limit']) ? $data['limit'] : 10;
+        $page = (isset($data['page']) && (int)$data['page'] > 0) ? $data['page'] : 1;
+
         $platform = isset($data['platform']) ? $data['platform'] : '';
         $job = new Job();
 
-        $newJobs = empty($limit) ? $job->getNewJobs() : $job->getNewJobs($limit);
+        $newJobs = $job->getNewJobs($page, $limit);
         if (!empty($platform) && $platform === 'twitter'){
-            $newJobs = empty($limit) ? $job->getNewTwitterJobs() : $job->getNewTwitterJobs($limit);
+            $newJobs =  $job->getNewTwitterJobs($page, $limit);
         }
 
         $response->getBody()->write(json_encode($newJobs));

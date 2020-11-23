@@ -100,26 +100,32 @@ class Job
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getNewJobs($limit=10): array
+    public function getNewJobs($page,$limit=10): array
     {
-        $query = 'SELECT * from jobs WHERE jobs.new = 1 ORDER BY created_at DESC LIMIT :limit';
+        $query = 'SELECT * from jobs WHERE jobs.new = 1 ORDER BY created_at DESC LIMIT :limit offset :offset';
 
         $stmt = $this->conn->prepare($query);
 
+        $offset = ($page - 1) * $limit;
+
         $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
 
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getNewTwitterJobs($limit=10)
+    public function getNewTwitterJobs($page, $limit=10)
     {
-        $query = 'SELECT * from jobs WHERE jobs.new = 1 AND twitter = 0 ORDER BY created_at DESC LIMIT :limit';
+        $query = 'SELECT * from jobs WHERE jobs.new = 1 AND twitter = 0 ORDER BY created_at DESC LIMIT :limit offset :offset';
 
         $stmt = $this->conn->prepare($query);
 
+        $offset = ($page - 1) * $limit;
+
         $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
 
         $stmt->execute();
 
